@@ -1475,6 +1475,13 @@ static void mlme_event_unprot_disconnect(struct wpa_driver_nl80211_data *drv,
 	if (len >= 24 + sizeof(mgmt->u.deauth))
 		reason_code = le_to_host16(mgmt->u.deauth.reason_code);
 
+       wpa_printf(MSG_DEBUG, "nl80211: mlme_event_unprot_disconnect reason %d", reason_code);
+
+        if (reason_code == WLAN_REASON_DISASSOC_LOW_ACK)
+                        wpa_msg(drv->ctx, MSG_INFO,
+                                WPA_EVENT_DRIVER_STATE "HANGED");
+
+
 	if (type == EVENT_UNPROT_DISASSOC) {
 		event.unprot_disassoc.sa = mgmt->sa;
 		event.unprot_disassoc.da = mgmt->da;
